@@ -17,12 +17,14 @@ if(options["general"]["usecudnnbenchmark"] and options["general"]["usecudnn"]):
 model = LipRead(options)
 
 if(options["general"]["loadpretrainedmodel"]):
-    model.load_state_dict(torch.load(options["general"]["pretrainedmodelpath"]))
-
+    model.load_state_dict(torch.load(options["general"]["pretrainedmodelpath"],map_location=lambda storage, loc: storage))
+#model = torch.load('/home/admin2/grp7/Lipreading-PyTorch/trainedmodel.pt',map_location=lambda storage, loc: storage)
 #Move the model to the GPU.
 if(options["general"]["usecudnn"]):
     model = model.cuda(options["general"]["gpuid"])
-
+#if(options["general"]["usecudnn"]):
+ #   model = model.cuda(options["general"]["gpuid"])
+#self.model = model.CPU().double()
 trainer = Trainer(options)
 validator = Validator(options)
 
@@ -33,3 +35,6 @@ for epoch in range(options["training"]["startepoch"], options["training"]["epoch
 
     if(options["validation"]["validate"]):
         validator.epoch(model)
+
+
+
